@@ -1,0 +1,320 @@
+{
+  "uuid": "7e86a259-1efa-4e43-8843-09c990e1dd5f",
+  "lastMigration": 32,
+  "name": "Evaluación PE - Frontend",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "ad1acd79-c1f1-4f5a-968a-1e29938f0f46",
+      "type": "http",
+      "documentation": "Autenticación. Devuelve el JWT de Supervisor si username = supervisor; de lo contrario, el de Operador.",
+      "method": "post",
+      "endpoint": "login",
+      "responses": [
+        {
+          "uuid": "5d9cca4a-c875-4edb-ad77-e4225359b96a",
+          "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODI4NTY2NjYsImV4cCI6MTk0MDUzNjY2Niwic3ViIjoiTWFyw61hIEZlcm5hbmRhIFJ1aXoiLCJuYW1lIjoiTWFyw61hIEZlcm5hbmRhIFJ1aXoiLCJSb2xlIjoiU3VwZXJ2aXNvciJ9.2JSliGD7KLaDq4Knit1y2vXHRsHI8iwa6tr-InY2gAg\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Supervisor",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "username",
+              "value": "supervisor",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "7ab074f9-de19-4853-8e4b-a39f9135d578",
+          "body": "{\n  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3ODI4NTY2NjYsImV4cCI6MTk0MDUzNjY2Niwic3ViIjoiQ2FybG9zIE3DqW5kZXoiLCJuYW1lIjoiQ2FybG9zIE3DqW5kZXoiLCJSb2xlIjoiT3BlcmFkb3IifQ.btTQsxjEyYGpgaSgLjPl7kAvzxsdx-7DAp8AM0G8DrI\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Operador (default)",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "c08961e5-048d-4cfb-b76c-5e2c73ca042f",
+      "type": "http",
+      "documentation": "Venta. Recibe los datos cifrados con AES. Un importe de 666 simula el rechazo (400).",
+      "method": "post",
+      "endpoint": "venta",
+      "responses": [
+        {
+          "uuid": "2142a4f1-e173-46e7-b5d8-e44e33ed884b",
+          "body": "{\n  \"message\": \"Transacción rechazada por el emisor\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Rechazo (amount = 666)",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "amount",
+              "value": "666",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "44754c43-59c2-4ae9-a838-40b16178062e",
+          "body": "{\n  \"approvalNumber\": \"{{faker 'number.int' min=100000 max=999999}}\",\n  \"financialReference\": \"{{faker 'number.int' min=10000000 max=99999999}}\",\n  \"maskedCard\": \"**** **** **** {{faker 'number.int' min=1000 max=9999}}\",\n  \"amount\": {{body 'amount'}},\n  \"status\": \"APROBADA\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Aprobada",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "ed3916c5-8107-4d8a-96af-a5a5453c828c",
+      "type": "http",
+      "documentation": "Listado de transacciones aprobadas (12 registros).",
+      "method": "get",
+      "endpoint": "transacciones",
+      "responses": [
+        {
+          "uuid": "89682668-5786-42f9-b0af-9403d847381b",
+          "body": "[\n  {{#repeat 12}}\n  {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"approvalNumber\": \"{{faker 'number.int' min=100000 max=999999}}\",\n    \"financialReference\": \"{{faker 'number.int' min=10000000 max=99999999}}\",\n    \"maskedCard\": \"**** **** **** {{faker 'number.int' min=1000 max=9999}}\",\n    \"amount\": {{faker 'finance.amount' min=120 max=18500 dec=2}},\n    \"holder\": \"{{faker 'person.fullName'}}\",\n    \"date\": \"{{faker 'date.recent' days=30}}\",\n    \"status\": \"APROBADA\"\n  }\n  {{/repeat}}\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "12 transacciones",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "694dda64-6bce-4011-9342-68d79a855406",
+      "type": "http",
+      "documentation": "Cancelación. Una referencia 00000000 simula que no existe la transacción (400).",
+      "method": "patch",
+      "endpoint": "cancelacion",
+      "responses": [
+        {
+          "uuid": "ce85053f-e0f4-4f18-881c-9e4fd008cda4",
+          "body": "{\n  \"message\": \"No se encontró una transacción con esa referencia\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "No encontrada (referencia = 00000000)",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "financialReference",
+              "value": "00000000",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "6b3393fe-e99a-4baf-8d43-a07d61ea9359",
+          "body": "{\n  \"approvalNumber\": \"{{faker 'number.int' min=100000 max=999999}}\",\n  \"financialReference\": \"{{body 'financialReference'}}\",\n  \"maskedCard\": \"{{substr (body 'cardNumber') 0 4}} **** **** {{substr (body 'cardNumber') 12}}\",\n  \"amount\": {{faker 'finance.amount' min=120 max=18500 dec=2}},\n  \"status\": \"CANCELADA\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Cancelada",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "8c40a092-b67a-445b-8968-994d018bcc1b",
+      "type": "http",
+      "documentation": "Devolución. Una referencia 00000000 simula que no existe la transacción (400).",
+      "method": "patch",
+      "endpoint": "devolucion",
+      "responses": [
+        {
+          "uuid": "da24bd51-9403-4ab2-94df-341c55c2969e",
+          "body": "{\n  \"message\": \"No se encontró una transacción con esa referencia\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "No encontrada (referencia = 00000000)",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "financialReference",
+              "value": "00000000",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "4989a7b4-fbd9-4513-8805-64d2245caefa",
+          "body": "{\n  \"approvalNumber\": \"{{faker 'number.int' min=100000 max=999999}}\",\n  \"financialReference\": \"{{body 'financialReference'}}\",\n  \"maskedCard\": \"{{substr (body 'cardNumber') 0 4}} **** **** {{substr (body 'cardNumber') 12}}\",\n  \"amount\": {{faker 'finance.amount' min=120 max=18500 dec=2}},\n  \"status\": \"DEVUELTA\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Devuelta",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "ad1acd79-c1f1-4f5a-968a-1e29938f0f46"
+    },
+    {
+      "type": "route",
+      "uuid": "c08961e5-048d-4cfb-b76c-5e2c73ca042f"
+    },
+    {
+      "type": "route",
+      "uuid": "ed3916c5-8107-4d8a-96af-a5a5453c828c"
+    },
+    {
+      "type": "route",
+      "uuid": "694dda64-6bce-4011-9342-68d79a855406"
+    },
+    {
+      "type": "route",
+      "uuid": "8c40a092-b67a-445b-8968-994d018bcc1b"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [],
+  "callbacks": []
+}
