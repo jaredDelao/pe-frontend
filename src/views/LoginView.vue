@@ -25,6 +25,7 @@ async function onSubmit() {
   loading.value = true;
   try {
     const { data } = await login(username.value.trim(), password.value);
+    console.log(data)
     auth.setSession(data.token);
     router.push({ name: auth.homeRoute });
   } catch {

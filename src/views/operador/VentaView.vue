@@ -121,6 +121,7 @@ async function onSubmit() {
       expiry: form.expiry,
       cvv: form.cvv,
     })
+    console.log(data)
     result.value = data
   } catch (err: any) {
     const status = err?.response?.status ?? 0

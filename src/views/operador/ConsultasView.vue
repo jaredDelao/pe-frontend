@@ -26,6 +26,7 @@ async function loadTransacciones() {
   try {
     const { data } = await listarTransacciones()
     rows.value = data
+    console.log(data)
   } catch {
     failed.value = true
   } finally {

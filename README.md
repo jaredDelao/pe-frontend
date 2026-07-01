@@ -69,7 +69,7 @@ Los comandos incluidos en package.json son:
 ### Cómo teclear la tarjeta según la marca
 
 La marca se detecta sola por los primeros dígitos que escribas, así que basta con empezar el
-número correcto para que el formulario la reconozca (y ajuste el formato, el largo y el CVV):
+número correcto para que el formulario la reconozca
 
 - **Visa**: empieza con **`4`**. Son 16 dígitos y CVV de 3. Ejemplo: `4111 1111 1111 1111`.
 - **Mastercard**: empieza con un número entre **`51` y `55`**, o entre **`22` y `27`**. También
