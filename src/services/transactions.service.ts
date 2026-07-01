@@ -8,7 +8,6 @@ import type {
 } from "@/types";
 
 export function venta(payload: VentaPayload) {
-  // Aquí cifre los dAtos de la tarjeta como un paso de seguridad
   const body = {
     amount: payload.amount,
     holderName: payload.holderName,

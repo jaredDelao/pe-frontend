@@ -27,6 +27,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     setSession(token: string) {
       const payload = jwtDecode<JwtPayload>(token)
+      console.log(payload)
       this.token = token
       this.role = (payload.Role ?? payload.role ?? null) as Role | null
       this.username = payload.sub ?? payload.name ?? null

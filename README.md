@@ -1,15 +1,19 @@
 # Pagos PE — Front End
 
-Aplicación de transacciones con control de acceso por rol. Un **Operador** registra ventas y
-consulta el historial; un **Supervisor** cancela y devuelve transacciones. El backend está
-simulado con Mockoon.
+Aplicación de transacciones con control de acceso por rol. La idea es sencilla: un **Operador**
+entra a registrar ventas y revisar el historial, mientras que un **Supervisor** se encarga de
+cancelar y devolver transacciones. Para no depender de un backend real, todo está simulado con
+Mockoon.
 
-Construida con Vue 3 (`<script setup>` + TypeScript), Vue Router, Pinia, Axios y Tailwind CSS.
+Por dentro está hecha con Vue 3 (`<script setup>` + TypeScript), Vue Router, Pinia, Axios y
+Tailwind CSS.
 
 ## Requisitos
 
-- Node 18 o superior
-- [Mockoon](https://mockoon.com/) (app de escritorio) o `@mockoon/cli`
+Antes de arrancar necesitas tener a mano:
+
+- Node 18 o superior.
+- [Mockoon](https://mockoon.com/), ya sea la app de escritorio o `@mockoon/cli`.
 
 ## Cómo correr el proyecto
 
@@ -19,13 +23,15 @@ cp .env.example .env
 npm run dev
 ```
 
-La app queda en `http://localhost:5173`. Necesita el mock corriendo en el puerto `3001`.
+Con eso la app queda disponible en `http://localhost:5173`. Eso sí, necesita que el mock esté
+corriendo en el puerto `3001`, así que no te olvides de levantarlo.
 
 ### Levantar el mock
 
-Con la app de escritorio: **Import** → `mockoon/evaluacion-pe.json` → *Start*.
+Si usas la app de escritorio, basta con ir a **Import**, elegir `mockoon/evaluacion-pe.json` y
+darle a *Start*.
 
-Con la CLI:
+Si prefieres la línea de comandos:
 
 ```bash
 npx @mockoon/cli start --data ./mockoon/evaluacion-pe.json --port 3001
@@ -33,38 +39,41 @@ npx @mockoon/cli start --data ./mockoon/evaluacion-pe.json --port 3001
 
 ## Credenciales de prueba
 
-El login enruta según el usuario; la contraseña es libre.
+El login decide a dónde llevarte según el usuario que escribas, y la contraseña es libre (pon lo
+que quieras). Las opciones son:
 
-| Usuario        | Rol        | Operaciones            |
-| -------------- | ---------- | ---------------------- |
-| `supervisor`   | Supervisor | Cancelación, Devolución |
-| cualquier otro | Operador   | Venta, Consultas        |
+- **`supervisor`** → entra como Supervisor y puede hacer Cancelación y Devolución.
+- **Cualquier otro usuario** → entra como Operador, con acceso a Venta y Consultas.
 
 ## Variables de entorno
 
-| Variable        | Descripción                                  |
-| --------------- | -------------------------------------------- |
-| `VITE_API_URL`  | Ruta base de la API. En desarrollo es `/api` |
-| `VITE_MOCK_URL` | Destino del proxy hacia Mockoon (`http://localhost:3001`) |
-| `VITE_AES_KEY`  | Llave AES (16, 24 o 32 caracteres)           |
-| `VITE_AES_IV`   | Vector de inicialización (16 caracteres)     |
+Estas son las variables que la app espera encontrar en tu `.env`:
 
-> El front pega a `/api` y el dev server de Vite reenvía esas peticiones a Mockoon
-> (ver `server.proxy` en `vite.config.ts`). Así el navegador trabaja siempre en el mismo
-> origen y se evitan los errores de CORS, independientemente de cómo levantes el mock.
+- **`VITE_API_URL`** — la ruta base de la API. En desarrollo apunta a `/api`.
+- **`VITE_MOCK_URL`** — el destino del proxy hacia Mockoon, normalmente `http://localhost:3001`.
+- **`VITE_AES_KEY`** — la llave AES, de 16, 24 o 32 caracteres.
+- **`VITE_AES_IV`** — el vector de inicialización, de 16 caracteres.
+
+Un detalle importante: el front siempre le pega a `/api` y es el dev server de Vite el que
+reenvía esas peticiones a Mockoon (puedes verlo en `server.proxy` dentro de `vite.config.ts`).
+Gracias a eso el navegador trabaja siempre sobre el mismo origen y te ahorras los típicos errores
+de CORS, sin importar cómo hayas levantado el mock.
 
 ## Scripts
 
-| Comando              | Acción                              |
-| -------------------- | ----------------------------------- |
-| `npm run dev`        | Servidor de desarrollo              |
-| `npm run build`      | Chequeo de tipos + build de producción |
-| `npm run preview`    | Previsualiza el build               |
-| `npm run type-check` | Solo chequeo de tipos               |
+Los comandos que vas a usar más seguido:
+
+- **`npm run dev`** — levanta el servidor de desarrollo.
+- **`npm run build`** — hace el chequeo de tipos y genera el build de producción.
+- **`npm run preview`** — te deja previsualizar ese build.
+- **`npm run type-check`** — corre solo el chequeo de tipos, sin construir nada.
 
 ## Cómo probar cada flujo
 
-- **Venta aprobada**: cualquier importe distinto de 666.
-- **Venta rechazada (400)**: importe `666` — dispara la respuesta de error del mock.
-- **Consultas**: 12 registros generados con datos dinámicos.
-- **Cancelación / Devolución 400**: referencia financiera `00000000`.
+Para que puedas ver los distintos comportamientos sin adivinar, aquí van los casos preparados en
+el mock:
+
+- **Venta aprobada**: usa cualquier importe que no sea 666.
+- **Venta rechazada (400)**: pon el importe `666` y se dispara la respuesta de error.
+- **Consultas**: verás 12 registros generados con datos dinámicos.
+- **Cancelación / Devolución con error (400)**: usa la referencia financiera `00000000`.

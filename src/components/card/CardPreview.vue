@@ -36,7 +36,6 @@ const brandLabel: Record<CardBrand, string> = {
 <template>
   <div class="card-scene">
     <div class="card-3d" :class="{ 'is-flipped': flipped }">
-      <!-- Frente -->
       <div class="card-face card-front">
         <div class="flex items-start justify-between">
           <div class="h-9 w-12 rounded-md bg-gradient-to-br from-amber-200 to-amber-400 shadow-inner" />
@@ -59,7 +58,6 @@ const brandLabel: Record<CardBrand, string> = {
         </div>
       </div>
 
-      <!-- Reverso -->
       <div class="card-face card-back">
         <div class="-mx-6 mt-5 h-10 bg-black/80" />
         <div class="mt-5 flex items-center justify-end">

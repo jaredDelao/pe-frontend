@@ -39,7 +39,6 @@
     "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Permite alternar tema con la clase .dark en <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {

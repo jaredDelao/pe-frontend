@@ -10,10 +10,10 @@ export interface Toast {
 }
 
 const toasts = reactive<Toast[]>([])
-let seq = 0
+let secuencias = 0
 
 function push(type: ToastType, title: string, message?: string, timeout = 4000) {
-  const id = ++seq
+  const id = ++secuencias
   toasts.push({ id, type, title, message })
   if (timeout > 0) {
     window.setTimeout(() => dismiss(id), timeout)

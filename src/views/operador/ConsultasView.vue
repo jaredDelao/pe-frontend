@@ -20,7 +20,7 @@ const toneByStatus: Record<EstatusTransaccion, 'success' | 'danger' | 'warning' 
   RECHAZADA: 'danger',
 }
 
-async function load() {
+async function loadTransacciones() {
   loading.value = true
   failed.value = false
   try {
@@ -33,7 +33,7 @@ async function load() {
   }
 }
 
-onMounted(load)
+onMounted(loadTransacciones)
 
 const filtered = computed(() => {
   const q = search.value.trim().toLowerCase()
@@ -55,7 +55,7 @@ function money(n: number) {
   return n.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
 }
 
-function shortDate(value: string) {
+function shortDatee(value: string) {
   const d = new Date(value)
   return Number.isNaN(d.getTime())
     ? value
@@ -86,7 +86,6 @@ function shortDate(value: string) {
     </PageHeader>
 
     <div class="overflow-hidden rounded-2xl bg-white shadow-card dark:bg-slate-800">
-      <!-- Loading -->
       <div v-if="loading" class="divide-y divide-slate-100 dark:divide-slate-700">
         <div v-for="n in 6" :key="n" class="flex items-center gap-4 px-5 py-4">
           <BaseSkeleton width="2.5rem" height="2.5rem" rounded="9999px" />
@@ -98,7 +97,6 @@ function shortDate(value: string) {
         </div>
       </div>
 
-      <!-- Error -->
       <div v-else-if="failed" class="flex flex-col items-center gap-3 px-6 py-16 text-center">
         <span class="grid size-12 place-items-center rounded-full bg-danger-soft text-danger">
           <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -108,12 +106,11 @@ function shortDate(value: string) {
         <p class="text-sm font-medium text-slate-700 dark:text-slate-200">
           No se pudieron cargar las transacciones
         </p>
-        <button class="text-sm font-semibold text-brand-600 hover:underline" @click="load">
+        <button class="text-sm font-semibold text-brand-600 hover:underline" @click="loadTransacciones">
           Reintentar
         </button>
       </div>
 
-      <!-- Empty -->
       <div v-else-if="!filtered.length" class="flex flex-col items-center gap-3 px-6 py-16 text-center">
         <span class="grid size-12 place-items-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700">
           <svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -126,7 +123,6 @@ function shortDate(value: string) {
         </p>
       </div>
 
-      <!-- Tabla (desktop) -->
       <table v-else class="hidden w-full text-left text-sm sm:table">
         <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-900/40">
           <tr>
@@ -155,7 +151,7 @@ function shortDate(value: string) {
             <td class="px-5 py-3.5 text-right font-medium text-slate-800 dark:text-slate-100">
               {{ money(r.amount) }}
             </td>
-            <td class="px-5 py-3.5 text-slate-500">{{ shortDate(r.date) }}</td>
+            <td class="px-5 py-3.5 text-slate-500">{{ shortDatee(r.date) }}</td>
             <td class="px-5 py-3.5">
               <BaseBadge :tone="toneByStatus[r.status] ?? 'neutral'">{{ r.status }}</BaseBadge>
             </td>
@@ -163,12 +159,11 @@ function shortDate(value: string) {
         </tbody>
       </table>
 
-      <!-- Tarjetas (móvil) -->
       <ul v-if="!loading && !failed && filtered.length" class="divide-y divide-slate-100 dark:divide-slate-700 sm:hidden">
         <li v-for="r in filtered" :key="r.id" class="flex items-center justify-between gap-3 px-4 py-3.5">
           <div class="min-w-0">
             <p class="truncate font-medium text-slate-800 dark:text-slate-100">{{ r.holder }}</p>
-            <p class="font-mono text-xs text-slate-400">{{ r.maskedCard }} · {{ shortDate(r.date) }}</p>
+            <p class="font-mono text-xs text-slate-400">{{ r.maskedCard }} · {{ shortDatee(r.date) }}</p>
           </div>
           <div class="text-right">
             <p class="font-medium text-slate-800 dark:text-slate-100">{{ money(r.amount) }}</p>

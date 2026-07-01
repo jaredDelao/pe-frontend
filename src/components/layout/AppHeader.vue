@@ -43,9 +43,8 @@ function logout() {
 
       <div class="ml-auto flex items-center gap-3">
         <button
-          class="grid size-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
-          :aria-label="theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'
-            " @click="toggle">
+          class="icon-btn text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+          :aria-label="theme === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'" @click="toggle">
           <svg v-if="theme === 'dark'" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">
             <circle cx="12" cy="12" r="4" />
@@ -69,9 +68,8 @@ function logout() {
           </div>
         </div>
 
-        <button
-          class="grid size-9 cursor-pointer place-items-center rounded-lg transition hover:bg-danger-soft hover:text-danger"
-          aria-label="Cerrar sesión" title="Cerrar sesión" @click="logout">
+        <button class="icon-btn cursor-pointer hover:bg-danger-soft hover:text-danger" aria-label="Cerrar sesión"
+          title="Cerrar sesión" @click="logout">
           <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M17 16l4-4m0 0l-4-4m4 4H7M13 16v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -80,9 +78,16 @@ function logout() {
       </div>
     </div>
 
-    <!-- Navegación para celulares    -->
     <div class="border-t border-slate-200/70 px-4 py-2 dark:border-slate-800 sm:hidden">
       <AppNav />
     </div>
   </header>
 </template>
+
+<style scoped>
+@reference "../../assets/styles/main.css";
+
+.icon-btn {
+  @apply grid size-9 place-items-center rounded-lg transition;
+}
+</style>

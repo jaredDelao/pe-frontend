@@ -60,12 +60,10 @@ router.beforeEach((to) => {
     return { name: 'login' }
   }
 
-  // Si ya inició sesión, no tiene sentido volver al login.
   if (to.name === 'login' && auth.isAuthenticated) {
     return { name: auth.homeRoute }
   }
 
-  // Cada rol solo entra a sus operaciones.
   if (to.meta.role && to.meta.role !== auth.role) {
     return { name: auth.homeRoute }
   }

@@ -14,8 +14,6 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      // El front pega a /api y Vite reenvía a Mockoon. Así el navegador
-      // siempre trabaja en mismo origen y no hay problemas de CORS.
       proxy: {
         '/api': {
           target: env.VITE_MOCK_URL || 'http://localhost:3001',

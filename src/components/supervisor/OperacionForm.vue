@@ -70,7 +70,6 @@ async function confirm() {
     })
     result.value = data
   } catch {
-    // Error notificado por el interceptor.
   } finally {
     loading.value = false
   }

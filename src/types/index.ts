@@ -41,10 +41,12 @@ export interface Transaccion {
   id: string
   approvalNumber: string
   financialReference: string
+  
   maskedCard: string
   amount: number
   holder: string
   date: string
+
   status: EstatusTransaccion
 }
 

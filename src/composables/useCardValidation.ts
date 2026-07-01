@@ -1,3 +1,4 @@
+import { parse, isValid, endOfMonth, isPast } from "date-fns";
 import type { CardBrand } from "@/types";
 
 export function onlyDigits(value: string): string {
@@ -40,14 +41,10 @@ export function formatExpiry(value: string): string {
 }
 
 export function expiryValid(value: string): boolean {
-  const m = value.match(/^(\d{2})\/(\d{2})$/);
-  if (!m) return false;
-  const month = Number(m[1]);
-  const year = 2000 + Number(m[2]);
-  if (month < 1 || month > 12) return false;
-  const now = new Date();
-  const last = new Date(year, month, 0, 23, 59, 59);
-  return last >= now;
+  if (!/^\d{2}\/\d{2}$/.test(value)) return false;
+  const expiry = parse(value, "MM/yy", new Date());
+  if (!isValid(expiry)) return false;
+  return !isPast(endOfMonth(expiry));
 }
 
 export function maskCard(num: string): string {
