@@ -32,14 +32,16 @@ api.interceptors.response.use(
     return res;
   },
   (err) => {
-    const notify = useNotify();
-    const status = err.response?.status ?? 0;
-    const message =
-      err.response?.data?.message ??
-      (status === 0
-        ? "No se pudo conectar con el servidor"
-        : "La solicitud no pudo completarse");
-    notify.error(`Error ${status || ""}`.trim(), message);
+    if (!err.config?.silent) {
+      const notify = useNotify();
+      const status = err.response?.status ?? 0;
+      const message =
+        err.response?.data?.message ??
+        (status === 0
+          ? "No se pudo conectar con el servidor"
+          : "La solicitud no pudo completarse");
+      notify.error(`Error ${status || ""}`.trim(), message);
+    }
     return Promise.reject(err);
   },
 );

@@ -15,7 +15,7 @@ export function venta(payload: VentaPayload) {
     expiry: encryptAES(payload.expiry),
     cvv: encryptAES(payload.cvv),
   };
-  return api.post<TransaccionResultado>("/venta", body);
+  return api.post<TransaccionResultado>("/venta", body, { silent: true });
 }
 
 export function listarTransacciones() {

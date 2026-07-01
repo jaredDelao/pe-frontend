@@ -14,6 +14,7 @@ import CardPreview from '@/components/card/CardPreview.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import BaseModal from '@/components/ui/BaseModal.vue'
 import ReceiptCard from '@/components/card/ReceiptCard.vue'
 
 const form = reactive({
@@ -35,6 +36,11 @@ const touched = reactive({
 const loading = ref(false)
 const cvvFocused = ref(false)
 const result = ref<TransaccionResultado | null>(null)
+const errorModal = reactive<{ open: boolean; status: number; message: string }>({
+  open: false,
+  status: 0,
+  message: '',
+})
 
 const brand = computed(() => detectBrand(form.number))
 
@@ -116,7 +122,15 @@ async function onSubmit() {
       cvv: form.cvv,
     })
     result.value = data
-  } catch {
+  } catch (err: any) {
+    const status = err?.response?.status ?? 0
+    errorModal.status = status
+    errorModal.message =
+      err?.response?.data?.message ??
+      (status === 0
+        ? 'No se pudo conectar con el servidor'
+        : 'La solicitud no pudo completarse')
+    errorModal.open = true
   } finally {
     loading.value = false
   }
@@ -210,5 +224,22 @@ function nuevaVenta() {
         </div>
       </form>
     </div>
+
+    <BaseModal :open="errorModal.open" title="" @close="errorModal.open = false">
+      <div class="flex flex-col items-center gap-4 text-center">
+        <div class="flex size-14 items-center justify-center rounded-full bg-danger/10 text-danger">
+          <svg class="size-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+          </svg>
+        </div>
+        <p class="text-sm text-slate-600 dark:text-slate-300">
+          {{ errorModal.message }}
+        </p>
+        <p v-if="errorModal.status" class="text-xs font-medium text-slate-400">
+          Código de error: {{ errorModal.status }}
+        </p>
+        <BaseButton block @click="errorModal.open = false">Entendido</BaseButton>
+      </div>
+    </BaseModal>
   </section>
 </template>
