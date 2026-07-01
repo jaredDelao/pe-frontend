@@ -32,6 +32,7 @@ export interface TransaccionResultado {
 export interface OperacionSupervisorPayload {
   financialReference: string
   cardNumber: string
+  transactionNumber?: string
 }
 
 export type EstatusTransaccion = 'APROBADA' | 'CANCELADA' | 'DEVUELTA' | 'RECHAZADA'

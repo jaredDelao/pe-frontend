@@ -10,7 +10,7 @@ const props = withDefaults(
 
 const tones: Record<string, string> = {
   success: "bg-success-soft text-success",
-  secondary: "bg-secondary-soft text-brand",
+  secondary: "bg-secondary-soft text-dark dark:bg-secondary dark:text-brand-dark",
   danger: "bg-danger-soft text-danger",
   warning: "bg-warning-soft text-warning",
   brand: "bg-brand-100 text-brand-700",
